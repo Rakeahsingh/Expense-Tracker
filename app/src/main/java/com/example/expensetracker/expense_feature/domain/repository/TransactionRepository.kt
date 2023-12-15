@@ -12,7 +12,7 @@ interface TransactionRepository {
 
     fun getDailyTransaction(entryDate: String): Flow<List<TransactionDto>>
 
-    fun getDailyTransactionByAccountType(accountType: String): Flow<List<AccountDto>>
+    fun getTransactionByAccount(accountType: String): Flow<List<TransactionDto>>
 
     fun getAccount(account: String): Flow<AccountDto>
 
