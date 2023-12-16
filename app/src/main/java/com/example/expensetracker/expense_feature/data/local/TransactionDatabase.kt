@@ -8,7 +8,11 @@ import com.example.expensetracker.expense_feature.data.local.entity.AccountDto
 
 
 @TypeConverters(value = [DateConverter::class])
-@Database(entities = [AccountDto::class, TransactionDao::class], version = 1)
+@Database(
+    entities = [AccountDto::class, TransactionDao::class],
+    version = 1,
+    exportSchema = true
+)
 abstract class TransactionDatabase : RoomDatabase(){
 
     abstract val dao: TransactionDao
