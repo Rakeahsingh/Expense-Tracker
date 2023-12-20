@@ -16,13 +16,13 @@ data class AccountDto(
     val accountType: String,
 
     @ColumnInfo(name= "balance")
-    val balance: Double,
+    var balance: Double,
 
     @ColumnInfo(name = "income")
-    val income: Double,
+    var income: Double,
 
     @ColumnInfo(name = "expense")
-    val expense: Double
+    var expense: Double
 ){
 
     fun toAccount(): Account{

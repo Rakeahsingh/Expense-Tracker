@@ -1,7 +1,10 @@
 package com.example.expensetracker.expense_feature.presentation.home_screen
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.expensetracker.core.Constant
 import com.example.expensetracker.core.UiEvent
+import com.example.expensetracker.expense_feature.data.local.entity.TransactionDto
 import com.example.expensetracker.expense_feature.domain.model.Transaction
 import com.example.expensetracker.expense_feature.domain.use_cases.GetDateUseCase
 import com.example.expensetracker.expense_feature.domain.use_cases.GetFormattedDateUseCase
@@ -22,8 +25,13 @@ import com.example.expensetracker.utils.Account
 import com.example.expensetracker.utils.Category
 import com.example.expensetracker.utils.TabButton
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.Calendar
 import java.util.Date
 import javax.inject.Inject
@@ -102,6 +110,10 @@ class HomeViewModel @Inject constructor(
     var limitKey = MutableStateFlow(String())
         private set
 
+    init {
+
+    }
+
 
     fun selectTabButton(button: TabButton){
         tabButton.value = button
@@ -122,5 +134,84 @@ class HomeViewModel @Inject constructor(
     fun setCurrentTime(time: Date){
         currentTime.value = time
     }
+
+    fun insertDailyTransaction(
+        date: String,
+        amount: Double,
+        category: String,
+        transactionType: String,
+        transactionTitle: String,
+        navigateBack: () -> Unit
+    ){
+        viewModelScope.launch {
+            if (amount <= 0.0){
+                showInfoBanner.value = true
+                delay(2000)
+                showInfoBanner.value = false
+                return@launch
+            }
+
+            val newTransaction = TransactionDto(
+                currentTime.value,
+                date,
+                account.value.title,
+                amount,
+                category,
+                transactionType,
+                transactionTitle
+            )
+            insertNewTransactionUseCase(newTransaction)
+
+            if (transactionType == Constant.INCOME){
+                val currentAccount = getAccountUseCase(account.value.title).first()
+                val newIncomeAmount = currentAccount.income + amount
+                val balance = newIncomeAmount - currentAccount.balance
+
+                currentAccount.expense = newIncomeAmount
+                currentAccount.balance = balance
+                insertAccountUseCase(listOf(currentAccount))
+            }else{
+                val currentAccount = getAccountUseCase(account.value.title).first()
+                val newExpenseAmount = currentAccount.expense + amount
+                val balance = currentAccount.income - newExpenseAmount
+
+                currentAccount.expense = newExpenseAmount
+                currentAccount.balance = balance
+                insertAccountUseCase(listOf(currentAccount))
+            }
+            withContext(Main){
+                navigateBack()
+            }
+        }
+    }
+
+
+    fun setTransaction(amount: String){
+        val value = transactionAmount.value
+        val whole = value.substring(0, value.indexOf("."))
+
+        if (amount == "."){
+            isDecimal.value = true
+            return
+        }
+
+        if (isDecimal.value){
+            if (decimal.length == 2){
+               decimal = decimal.substring(0, decimal.length - 1) + amount
+            }else{
+                decimal += amount
+            }
+            val newDecimal = decimal.toDouble() / 100.0
+            transactionAmount.value = String.format("%.2f", whole.toDouble() + newDecimal)
+            return
+        }
+
+        if (whole == "0"){
+            transactionAmount.value = String.format("%.2f", amount.toDouble())
+        }else{
+            transactionAmount.value = String.format("%.2f", (whole + amount).toDouble())
+        }
+    }
+
 
 }
