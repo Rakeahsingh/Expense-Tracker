@@ -10,9 +10,8 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.example.expensetracker.expense_feature.domain.repository.DataStoreRepository
-import com.example.expensetracker.utils.Constant
+import com.example.expensetracker.core.Constant
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 

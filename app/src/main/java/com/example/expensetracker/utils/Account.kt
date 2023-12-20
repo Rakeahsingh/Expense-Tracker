@@ -1,9 +1,19 @@
 package com.example.expensetracker.utils
 
-enum class Account(val title : String) {
+import androidx.compose.ui.graphics.Color
+import com.example.expensetracker.R
+import com.example.expensetracker.ui.theme.healthBg
+import com.example.expensetracker.ui.theme.leisureBg
+import com.example.expensetracker.ui.theme.subBg
 
-    CASH("cash"),
-    BANK("bank"),
-    CARD("card")
+enum class Account(
+    val title : String,
+    val iconRes: Int,
+    val color: Color
+) {
+
+    CASH("cash", R.drawable.cash, leisureBg),
+    BANK("bank", R.drawable.bank, subBg),
+    CARD("card", R.drawable.credit_card, healthBg)
 
 }

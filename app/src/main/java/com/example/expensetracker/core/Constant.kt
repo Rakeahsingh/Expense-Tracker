@@ -1,4 +1,4 @@
-package com.example.expensetracker.utils
+package com.example.expensetracker.core
 
 object Constant {
 
