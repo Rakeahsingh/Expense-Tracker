@@ -17,9 +17,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.expensetracker.expense_feature.presentation.home_screen.components.AddEntryChooser
+import com.example.expensetracker.expense_feature.presentation.home_screen.components.Header
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -54,7 +54,7 @@ fun HomeScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-
+            Header(bottomSheetScaffoldState = bottomSheetScaffoldState)
 
         }
 

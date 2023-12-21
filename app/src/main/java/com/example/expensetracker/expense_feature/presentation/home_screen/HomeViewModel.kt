@@ -437,10 +437,9 @@ class HomeViewModel @Inject constructor(
     }
 
 
-    fun String.amountFormat(): String {
-        val amountFormatter = DecimalFormat("#,##0.00")
-        return " " + amountFormatter.format(this.toDouble())
-    }
+}
 
-
+fun String.amountFormat(): String {
+    val amountFormatter = DecimalFormat("#,##0.00")
+    return " " + amountFormatter.format(this.toDouble())
 }
