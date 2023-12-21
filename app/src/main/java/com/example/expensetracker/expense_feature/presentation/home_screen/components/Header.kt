@@ -139,6 +139,7 @@ fun Header(
                     )
                 }
 
+
                 Text(
                     text = "Balance",
                     style = MaterialTheme.typography.subtitle2.copy(fontWeight = FontWeight.Normal),
