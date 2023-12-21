@@ -30,6 +30,7 @@ import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -114,9 +115,92 @@ class HomeViewModel @Inject constructor(
         private set
 
     init {
+        val currentDate = getDateUseCase()
+        formattedDate.value = getFormattedDateUseCase(currentTime.value)
+        date.value = currentDate
+        currencyFormat()
+
+        viewModelScope.launch {
+            getLimitDurationUseCase().collect{
+                duration.value = it
+            }
+        }
+
+        viewModelScope.launch {
+            getLimitKeyUseCase().collectLatest {
+                limitKey.value = it.toString()
+            }
+        }
+
+        viewModelScope.launch {
+            when(duration.value){
+                0 -> {
+                    getCurrentDayExpTransactionUseCase().collect{
+                        val trx = it.map {
+                            it.toTransaction()
+                        }
+                        currentExpenseAmount.value = calculateTransaction(trx.map { it.amount })
+                    }
+                }
+                1 -> {
+                    getWeeklyExpTransactionUseCase().collect{
+                        val trx = it.map {
+                            it.toTransaction()
+                        }
+                        currentExpenseAmount.value = calculateTransaction(trx.map { it.amount })
+                    }
+                }
+                else -> {
+                    getMonthlyExpTransactionUseCase().collect{
+                        val trx = it.map { it.toTransaction() }
+                        currentExpenseAmount.value = calculateTransaction(trx.map { it.amount })
+                    }
+                }
+            }
+        }
+
+        viewModelScope.launch {
+            getDailyTransactionUseCase(currentDate).collect{
+                it.let { expense ->
+                    dailyTransaction.value = expense.map { dailyExpense ->
+                        dailyExpense.toTransaction()
+                    }.reversed()
+                }
+            }
+        }
+
+        viewModelScope.launch {
+            getAllTransactionUseCase().collect{
+                it.let {
+                    val allSortedTrx = it.map {
+                        it.toTransaction()
+                    }.reversed()
+                    monthlyTransaction.value = allSortedTrx.groupBy { monthlyExpense ->
+                        getFormattedDateUseCase(monthlyExpense.date)
+                    }
+                }
+            }
+        }
+
+        viewModelScope.launch {
+            getAccountsUseCase().collect{
+                val accounts = it.map { it.toAccount() }
+                val income = calculateTransaction(accounts.map { it.income })
+                val expense = calculateTransaction(accounts.map { it.expense })
+
+                totalIncome.value = income
+                totalExpense.value = expense
+            }
+        }
+
 
     }
 
+    private fun calculateTransaction(transaction: List<Double>): Double{
+        return transaction.sumOf {
+            it
+        }
+    }
 
     fun selectTabButton(button: TabButton){
         tabButton.value = button
@@ -335,11 +419,19 @@ class HomeViewModel @Inject constructor(
                     }
                     currentExpenseAmount.value > threshold -> {
                         val expenseAvailable = (expenseAmount - currentExpenseAmount.value).toString().amountFormat()
-                        val info = "${selectedCurrencyCode.value} $expenseAvailable Away from specified limt"
+                        val info = "${selectedCurrencyCode.value} $expenseAvailable Away from specified limit"
                         limitAlert.emit(UiEvent.Alert(info))
                     }
                     else -> limitAlert.emit(UiEvent.NoAlert())
                 }
+            }
+        }
+    }
+
+    private fun currencyFormat(){
+        viewModelScope.launch {
+            getCurrencyUseCase().collect{ selectedCurrency ->
+                selectedCurrencyCode.value = selectedCurrency
             }
         }
     }
