@@ -66,9 +66,6 @@ fun Header(
     val totalExpense by viewModel.totalExpense.collectAsState()
     val currencyCode by viewModel.selectedCurrencyCode.collectAsState()
 
-    val extraSmall = MaterialTheme.spacing.extraSmall
-    val small = MaterialTheme.spacing.small
-    val medium = MaterialTheme.spacing.medium
 
     BoxWithConstraints(
         modifier = Modifier
@@ -82,52 +79,49 @@ fun Header(
 
         Surface(
             modifier = Modifier.padding(
+                start =spacing.medium,
                 top = spacing.medium,
-                start = spacing.medium,
                 end = spacing.medium,
-                bottom = spacing.medium
-            ),
-            color = Color.DarkGray.copy(alpha = 0.1f),
+                bottom = spacing.small
+            ), color = Color.DarkGray.copy(alpha = 0.1f),
             shape = RoundedCornerShape(24.dp)
         ) {
-
             ConstraintLayout(
                 modifier = Modifier
                     .fillMaxSize()
             ) {
-
-                val (addEntry, balanceLabel1, amountLabel1) = createRefs()
+                val (addEntry, balanceLabel, amountLabel) = createRefs()
                 val (incomeCard, expenseCard) = createRefs()
 
-                TextButton(onClick = {
-                    scope.launch {
-                        if (bottomSheetScaffoldState.bottomSheetState.isCollapsed){
-                            bottomSheetScaffoldState.bottomSheetState.expand()
-                        }else{
-                            bottomSheetScaffoldState.bottomSheetState.collapse()
+                TextButton(
+                    onClick = {
+                        scope.launch {
+                            if (bottomSheetScaffoldState.bottomSheetState.isCollapsed) {
+                                bottomSheetScaffoldState.bottomSheetState.expand()
+                            } else
+                                bottomSheetScaffoldState.bottomSheetState.collapse()
                         }
-                    }
-                },
-                    modifier = Modifier
-                        .constrainAs(addEntry){
-                            top.linkTo(parent.top, margin = spacing.small)
-                            end.linkTo(parent.end, margin = spacing.medium)
-                        },
+                    },
+                    modifier = Modifier.constrainAs(addEntry) {
+                        top.linkTo(parent.top, margin = spacing.small)
+                        end.linkTo(parent.end, margin = spacing.medium)
+                    },
                     colors = ButtonDefaults.buttonColors(Amber500.copy(alpha = 0.9f)),
                     shape = RoundedCornerShape(24.dp)
-                ) {
+                )
+                {
                     Text(
                         text = currentDate,
                         style = MaterialTheme.typography.body2,
                         color = MaterialTheme.colors.onSurface,
-                        textAlign = TextAlign.Start,
                         modifier = Modifier
-                            .padding(8.dp)
+                            .padding(8.dp),
+                        textAlign = TextAlign.Start
                     )
 
                     Icon(
                         painter = painterResource(id = R.drawable.add_entry),
-                        contentDescription = "add_entry",
+                        contentDescription = "add entry",
                         tint = MaterialTheme.colors.onSurface,
                         modifier = Modifier
                             .border(
@@ -139,30 +133,29 @@ fun Header(
                     )
                 }
 
-
                 Text(
                     text = "Balance",
                     style = MaterialTheme.typography.subtitle2.copy(fontWeight = FontWeight.Normal),
                     color = MaterialTheme.colors.onSurface,
                     letterSpacing = TextUnit(1.5f, TextUnitType.Sp),
-                    modifier = Modifier.constrainAs(balanceLabel1) {
-                        start.linkTo(parent.start, margin = medium)
+                    modifier = Modifier.constrainAs(balanceLabel) {
+                        start.linkTo(parent.start, margin = spacing.medium)
                         top.linkTo(addEntry.bottom)
                     }
                 )
 
                 val animatedBalance by animateFloatAsState(
                     targetValue = totalIncome.toFloat() - totalExpense.toFloat(),
-                    animationSpec = tween(900), label = ""
+                    animationSpec = tween(durationMillis = 900), label = ""
                 )
 
                 Text(
                     text = currencyCode + "$animatedBalance".amountFormat(),
-                    color = MaterialTheme.colors.onSurface,
                     style = MaterialTheme.typography.h6,
-                    modifier = Modifier.constrainAs(balanceLabel1){
-                        start.linkTo(parent.start, margin = medium)
-                        top.linkTo(balanceLabel1.bottom, margin = extraSmall)
+                    color = MaterialTheme.colors.onSurface,
+                    modifier = Modifier.constrainAs(amountLabel) {
+                        start.linkTo(parent.start, margin = spacing.medium)
+                        top.linkTo(balanceLabel.bottom, margin = spacing.extraSmall)
                     }
                 )
 
@@ -238,15 +231,15 @@ fun Header(
                     elevation = 16.dp,
                     backgroundColor = GreenAlpha700,
                     shape = RoundedCornerShape(16.dp),
-                    modifier = Modifier.constrainAs(incomeCard){
-                        top.linkTo(amountLabel1.bottom, margin = spacing.small)
-                        start.linkTo(parent.start, margin = spacing.medium)
-                        bottom.linkTo(parent.bottom, margin = spacing.small)
-                        width = Dimension.percent(0.42f)
-                        height = Dimension.fillToConstraints
-                    }
+                    modifier = Modifier
+                        .constrainAs(incomeCard) {
+                            top.linkTo(amountLabel.bottom, margin = spacing.medium)
+                            start.linkTo(parent.start, margin = spacing.medium)
+                            bottom.linkTo(parent.bottom, margin = spacing.medium)
+                            width = Dimension.percent(0.42f)
+                            height = Dimension.fillToConstraints
+                        }
                 ) {
-
                     ConstraintLayout(
                         modifier = Modifier
                             .fillMaxSize()
@@ -255,23 +248,19 @@ fun Header(
                                     mediumIncomeColoredPath,
                                     color = Color.LightGray.copy(alpha = 0.40f)
                                 )
-
                                 drawPath(
                                     lightIncomeColoredPath,
                                     color = Color.LightGray.copy(alpha = 0.35f)
                                 )
                             }
-                            .padding(spacing.small)
+                            .padding(MaterialTheme.spacing.small)
                     ) {
-
                         val animatedIncome by animateFloatAsState(
                             targetValue = totalIncome.toFloat(),
-                            animationSpec = tween(900),
-                            label = ""
+                            animationSpec = tween(durationMillis = 900), label = ""
                         )
 
                         val (incomeIcon, incomeLabel, code, incomeAmount) = createRefs()
-
                         Icon(
                             painter = painterResource(id = R.drawable.income),
                             contentDescription = "Income",
@@ -283,56 +272,54 @@ fun Header(
                                 }
                                 .then(Modifier.size(24.dp))
                         )
-
                         Text(
                             text = "Income",
                             style = MaterialTheme.typography.subtitle2,
                             color = MaterialTheme.colors.surface,
-                            modifier = Modifier.constrainAs(incomeLabel){
-                                top.linkTo(incomeIcon.bottom , margin = spacing.extraSmall)
+                            modifier = Modifier.constrainAs(incomeLabel) {
+                                top.linkTo(incomeIcon.bottom, margin = spacing.extraSmall)
                                 start.linkTo(parent.start)
                             }
                         )
-
                         Text(
                             text = currencyCode,
                             style = MaterialTheme.typography.body1,
-                            color = MaterialTheme.colors.surface,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
-                            modifier = Modifier.constrainAs(code){
+                            color = MaterialTheme.colors.surface,
+                            modifier = Modifier.constrainAs(code) {
                                 start.linkTo(parent.start)
                                 bottom.linkTo(incomeAmount.top)
                             }
                         )
-
                         Text(
                             text = "$animatedIncome".amountFormat().trim(),
                             style = MaterialTheme.typography.body2,
-                            color = MaterialTheme.colors.surface,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
-                            modifier = Modifier.constrainAs(incomeAmount){
+                            color = MaterialTheme.colors.surface,
+                            modifier = Modifier.constrainAs(incomeAmount) {
                                 start.linkTo(parent.start)
                                 bottom.linkTo(parent.bottom)
                             }
                         )
                     }
+
                 }
 
                 Card(
                     elevation = 16.dp,
                     backgroundColor = Red500,
                     shape = RoundedCornerShape(16.dp),
-                    modifier = Modifier.constrainAs(expenseCard){
-                        top.linkTo(amountLabel1.bottom, margin = spacing.small)
-                        start.linkTo(parent.start, margin = spacing.medium)
-                        bottom.linkTo(parent.bottom, margin = spacing.small)
-                        width = Dimension.percent(0.42f)
-                        height = Dimension.fillToConstraints
-                    }
+                    modifier = Modifier
+                        .constrainAs(expenseCard) {
+                            top.linkTo(amountLabel.bottom, margin = spacing.medium)
+                            end.linkTo(parent.end, margin = spacing.medium)
+                            bottom.linkTo(parent.bottom, margin = spacing.medium)
+                            width = Dimension.percent(0.42f)
+                            height = Dimension.fillToConstraints
+                        }
                 ) {
-
                     ConstraintLayout(
                         modifier = Modifier
                             .fillMaxSize()
@@ -341,23 +328,19 @@ fun Header(
                                     mediumExpenseColoredPath,
                                     color = Color.LightGray.copy(alpha = 0.40f)
                                 )
-
                                 drawPath(
                                     lightExpenseColoredPath,
                                     color = Color.LightGray.copy(alpha = 0.35f)
                                 )
                             }
-                            .padding(spacing.small)
+                            .padding(MaterialTheme.spacing.small)
                     ) {
-
                         val animatedExpense by animateFloatAsState(
-                            targetValue = totalIncome.toFloat(),
-                            animationSpec = tween(900),
-                            label = ""
+                            targetValue = totalExpense.toFloat(),
+                            animationSpec = tween(durationMillis = 900), label = ""
                         )
 
                         val (expenseIcon, expenseLabel, code, expenseAmount) = createRefs()
-
                         Icon(
                             painter = painterResource(id = R.drawable.expense),
                             contentDescription = "Expense",
@@ -369,36 +352,33 @@ fun Header(
                                 }
                                 .then(Modifier.size(24.dp))
                         )
-
                         Text(
                             text = "Expense",
                             style = MaterialTheme.typography.subtitle2,
                             color = MaterialTheme.colors.surface,
-                            modifier = Modifier.constrainAs(expenseLabel){
-                                top.linkTo(expenseIcon.bottom , margin = spacing.extraSmall)
+                            modifier = Modifier.constrainAs(expenseLabel) {
+                                top.linkTo(expenseIcon.bottom, margin = spacing.extraSmall)
                                 start.linkTo(parent.start)
                             }
                         )
-
                         Text(
                             text = currencyCode,
                             style = MaterialTheme.typography.body1,
-                            color = MaterialTheme.colors.surface,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
-                            modifier = Modifier.constrainAs(code){
+                            color = MaterialTheme.colors.surface,
+                            modifier = Modifier.constrainAs(code) {
                                 start.linkTo(parent.start)
                                 bottom.linkTo(expenseAmount.top)
                             }
                         )
-
                         Text(
                             text = "$animatedExpense".amountFormat().trim(),
                             style = MaterialTheme.typography.body2,
-                            color = MaterialTheme.colors.surface,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
-                            modifier = Modifier.constrainAs(expenseAmount){
+                            color = MaterialTheme.colors.surface,
+                            modifier = Modifier.constrainAs(expenseAmount) {
                                 start.linkTo(parent.start)
                                 bottom.linkTo(parent.bottom)
                             }

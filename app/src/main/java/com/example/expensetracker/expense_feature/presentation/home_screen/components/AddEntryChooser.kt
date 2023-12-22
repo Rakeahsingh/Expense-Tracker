@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.expensetracker.R
 import com.example.expensetracker.expense_feature.presentation.navigation.Screens
+import com.example.expensetracker.ui.theme.expenseGradient
 import com.example.expensetracker.ui.theme.incomeGradient
 import kotlinx.coroutines.launch
 
@@ -98,7 +99,7 @@ fun AddEntryChooser(
                     modifier = Modifier
                         .size(48.dp, 48.dp)
                         .rotate(expendRotation)
-                        .background(incomeGradient, CircleShape)
+                        .background(expenseGradient, CircleShape)
                         .padding(8.dp)
                 )
             }
