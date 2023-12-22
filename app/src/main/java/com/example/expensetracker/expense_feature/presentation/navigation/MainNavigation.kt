@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.expensetracker.expense_feature.presentation.account_screen.AccountScreen
 import com.example.expensetracker.expense_feature.presentation.home_screen.HomeScreen
+import com.example.expensetracker.expense_feature.presentation.home_screen.TransactionScreen
 import com.example.expensetracker.expense_feature.presentation.insight_screen.InsightScreen
 import com.example.expensetracker.expense_feature.presentation.setting_screen.SettingScreen
 import com.example.expensetracker.expense_feature.presentation.welcome_screen.CurrencyScreen
@@ -45,6 +46,37 @@ fun MainNavigation(
 
         composable(Screens.HomeScreen.route){
             HomeScreen(navController = navController)
+        }
+
+        composable(
+            route = "${Screens.TransactionScreen.route}/{tag}?trxKey={trxKey}&trxPos={trxPos}&trxStatus={trxStatus}",
+            arguments = listOf(
+                navArgument("tag"){
+                  type = NavType.IntType
+                  defaultValue = 0
+                },
+                navArgument("trxKey"){
+                    type = NavType.StringType
+                    defaultValue = null
+                    nullable = true
+                },
+                navArgument("trxPos"){
+                    type = NavType.IntType
+                    defaultValue = -1
+                },
+                navArgument("trxStatus"){
+                    type = NavType.IntType
+                    defaultValue = -1
+                }
+            )
+        ){
+            TransactionScreen(
+                navController = navController,
+                transactionTag = it.arguments?.getInt("tag"),
+                transactionDate = it.arguments?.getString("trxKey"),
+                transactionPos = it.arguments?.getInt("trxPos"),
+                transactionStatus = it.arguments?.getInt("trxStatus")
+            )
         }
 
         composable(Screens.InsightScreen.route){
