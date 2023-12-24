@@ -73,7 +73,7 @@ fun TransactionItem(
                 )
         ) {
             Row(
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                horizontalArrangement = Arrangement.spacedBy(18.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -117,7 +117,7 @@ fun TransactionItem(
             Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
 
             Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -138,7 +138,7 @@ fun TransactionItem(
                     if (transaction.title.isNotEmpty()) {
                         Text(
                             text = transaction.title,
-                            style = MaterialTheme.typography.body2,
+                            style = MaterialTheme.typography.body1,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
                         )

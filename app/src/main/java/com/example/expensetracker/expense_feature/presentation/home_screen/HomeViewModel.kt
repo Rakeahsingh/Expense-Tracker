@@ -30,7 +30,6 @@ import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -96,6 +95,7 @@ class HomeViewModel @Inject constructor(
     var totalExpense = MutableStateFlow(0.0)
         private set
 
+
     var formattedDate = MutableStateFlow(String())
         private set
 
@@ -111,7 +111,7 @@ class HomeViewModel @Inject constructor(
     var limitAlert = MutableSharedFlow<UiEvent>(replay = 1)
         private set
 
-    var limitKey = MutableStateFlow(String())
+    var limitKey = MutableStateFlow(false)
         private set
 
     init {
@@ -128,7 +128,7 @@ class HomeViewModel @Inject constructor(
 
         viewModelScope.launch {
             getLimitKeyUseCase().collectLatest {
-                limitKey.value = it.toString()
+                limitKey.value = it
             }
         }
 
@@ -254,7 +254,7 @@ class HomeViewModel @Inject constructor(
                 val newIncomeAmount = currentAccount.income + amount
                 val balance = newIncomeAmount - currentAccount.balance
 
-                currentAccount.expense = newIncomeAmount
+                currentAccount.income = newIncomeAmount
                 currentAccount.balance = balance
                 insertAccountUseCase(listOf(currentAccount))
             }else{

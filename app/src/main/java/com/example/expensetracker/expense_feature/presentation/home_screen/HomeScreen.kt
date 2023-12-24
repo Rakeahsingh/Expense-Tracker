@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.BottomSheetScaffold
 import androidx.compose.material.BottomSheetValue
 import androidx.compose.material.Divider
@@ -28,6 +30,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.BlendMode.Companion.Screen
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -78,13 +81,13 @@ fun HomeScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            // Header content
-            Header(bottomSheetScaffoldState = bottomSheetScaffoldState)
+                // Header content
+                Header(bottomSheetScaffoldState = bottomSheetScaffoldState)
 
-            // Tab button
-            TabButton()
+                // Tab button
+                TabButton()
 
-            Spacer(modifier = Modifier.height(spacing.medium))
+                Spacer(modifier = Modifier.height(spacing.medium))
 
             Text(
                 text = "Transactions",
