@@ -6,6 +6,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.example.expensetracker.expense_feature.presentation.account_screen.AccountDetailScreen
 import com.example.expensetracker.expense_feature.presentation.account_screen.AccountScreen
 import com.example.expensetracker.expense_feature.presentation.home_screen.HomeScreen
 import com.example.expensetracker.expense_feature.presentation.home_screen.TransactionScreen
@@ -85,6 +86,20 @@ fun MainNavigation(
 
         composable(Screens.AccountScreen.route){
             AccountScreen(navController = navController)
+        }
+
+        composable(
+            route = "${Screens.AccountDetailScreen.route}/{accountType}",
+            arguments = listOf(
+                navArgument("accountType"){
+                    type = NavType.StringType
+                    defaultValue = "Cash"
+                    nullable = true
+                }
+            )
+        ){
+            val accountName = it.arguments?.getString("accountType")
+            AccountDetailScreen(accountName = accountName)
         }
 
         composable(Screens.SettingScreen.route){

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
@@ -34,6 +35,7 @@ import com.example.expensetracker.expense_feature.presentation.home_screen.HomeV
 import com.example.expensetracker.expense_feature.presentation.home_screen.amountFormat
 import com.example.expensetracker.ui.theme.GreenAlpha700
 import com.example.expensetracker.ui.theme.Red500
+import com.example.expensetracker.utils.Account
 import com.example.expensetracker.utils.Category
 import com.example.expensetracker.utils.LocalSpacing
 import com.example.expensetracker.utils.spacing
@@ -101,7 +103,7 @@ fun TransactionItem(
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier
                         .background(
-                            Color.White,
+                           Color.White,
                             shape = RoundedCornerShape(cornerRadius)
                         )
                         .padding(
@@ -129,7 +131,7 @@ fun TransactionItem(
                     modifier = Modifier
                         .background(
                             Color.DarkGray.copy(alpha = 0.2f),
-                            RoundedCornerShape(8.dp)
+                            CircleShape
                         )
                         .padding(18.dp)
                 )
