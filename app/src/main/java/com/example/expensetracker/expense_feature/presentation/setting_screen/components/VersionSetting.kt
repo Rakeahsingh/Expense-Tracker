@@ -51,7 +51,7 @@ fun VersionSetting() {
         )
 
         CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
-            val packageManager = context.packageManager.getPackageInfo("com.RakeshSingh.expenseTracker", 0)
+            val packageManager = context.packageManager.getPackageInfo("com.example.expensetracker", 0)
             Text(
                 text = packageManager.versionName,
                 style = MaterialTheme.typography.subtitle2

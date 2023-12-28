@@ -123,4 +123,6 @@ dependencies {
     // Compose Constraint Layout
     implementation ("androidx.constraintlayout:constraintlayout-compose:1.0.1")
 
+    //work
+    implementation("androidx.work:work-runtime-ktx:2.9.0")
 }

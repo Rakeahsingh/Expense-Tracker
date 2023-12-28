@@ -20,7 +20,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -35,7 +34,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.expensetracker.expense_feature.presentation.setting_screen.components.CurrencySetting
 import com.example.expensetracker.expense_feature.presentation.setting_screen.components.EraseSetting
+import com.example.expensetracker.expense_feature.presentation.setting_screen.components.EraseSheetContent
 import com.example.expensetracker.expense_feature.presentation.setting_screen.components.LimitSetting
+import com.example.expensetracker.expense_feature.presentation.setting_screen.components.LimitSheetContent
 import com.example.expensetracker.expense_feature.presentation.setting_screen.components.PrivacySetting
 import com.example.expensetracker.expense_feature.presentation.setting_screen.components.RattingSetting
 import com.example.expensetracker.expense_feature.presentation.setting_screen.components.ReminderSetting
@@ -63,10 +64,16 @@ fun SettingScreen(
             Box(Modifier.defaultMinSize(minHeight = 1.dp) ){
                 when(sheetRankState.intValue){
                     1 -> {
-
+                        LimitSheetContent(
+                            modalBottomSheetState = modelBottomSheetState,
+                            scope = scope
+                        )
                     }
                     2 -> {
-
+                        EraseSheetContent(
+                            modalBottomSheetState = modelBottomSheetState,
+                            scope = scope
+                        )
                     }
                 }
             }
